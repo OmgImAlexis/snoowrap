@@ -1,4 +1,4 @@
-import * as Snoowrap from '../snoowrap';
+import Snoowrap from '../snoowrap';
 
 export default class RedditContent<T> extends Promise<T> {
   created_utc: number;

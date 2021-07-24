@@ -1,6 +1,6 @@
 import RedditContent from './RedditContent';
 import RedditUser from './RedditUser';
-import * as Snoowrap from '../snoowrap';
+import Snoowrap from '../snoowrap';
 
 export interface BanStatus {
   endDate?: string | null;
@@ -82,4 +82,4 @@ export default class ModmailConversationAuthor extends RedditContent<ModmailConv
   getUser (): Promise<RedditUser> {
     return this._r.getUser(this.name);
   }
-};
+}
