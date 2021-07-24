@@ -1,6 +1,4 @@
 import Listing from './Listing';
-import RedditUser from './RedditUser';
-import Subreddit from './Subreddit';
 import VoteableContent from './VoteableContent';
 
 export default class Comment extends VoteableContent<Comment> {
@@ -12,7 +10,7 @@ export default class Comment extends VoteableContent<Comment> {
   controversiality: number;
   depth: number;
   ignore_reports: boolean;
-  /** True if comment author is the same as the Submission author */
+  /** `true` if comment author is the same as the Submission author */
   is_submitter: boolean;
   link_id: string;
   parent_id: string;
