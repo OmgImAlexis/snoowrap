@@ -1,5 +1,5 @@
-import Snoowrap = require('../dist/snoowrap');
 import {
+  Snoowrap,
   Comment,
   Listing,
   LiveThread,
