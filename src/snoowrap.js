@@ -35,8 +35,8 @@ export class Snoowrap {
    * @summary Constructs a new requester.
    * @desc You should use the snoowrap constructor if you are able to authorize a reddit account in advance (e.g. for a Node.js
    script that always uses the same account). If you aren't able to authorize in advance (e.g. acting through an arbitrary user's
-   account while running snoowrap in a browser), then you should use {@link snoowrap.getAuthUrl} and
-   {@link snoowrap.fromAuthCode} instead.
+   account while running snoowrap in a browser), then you should use {@link Snoowrap.getAuthUrl} and
+   {@link Snoowrap.fromAuthCode} instead.
    *
    * To edit snoowrap specific settings, see {@link snoowrap#config}.
    *
@@ -111,7 +111,7 @@ export class Snoowrap {
    * @desc This create a URL where a user can authorize an app to act through their account. If the user visits the returned URL
    in a web browser, they will see a page that looks like [this](https://i.gyazo.com/0325534f38b78c1dbd4c84d690dda6c2.png). If
    the user clicks "Allow", they will be redirected to your `redirectUri`, with a `code` querystring parameter containing an
-   * *authorization code*. If this code is passed to {@link snoowrap.fromAuthCode}, you can create a requester to make
+   * *authorization code*. If this code is passed to {@link Snoowrap.fromAuthCode}, you can create a requester to make
    requests on behalf of the user.
    *
    * The main use-case here is for running snoowrap in a browser. You can generate a URL, send the user there, and then continue
@@ -122,7 +122,7 @@ export class Snoowrap {
    browser, using an "Installed" app type is recommended.
    * @param {string[]} options.scope An array of scopes (permissions on the user's account) to request on the authentication
    page. A list of possible scopes can be found [here](https://www.reddit.com/api/v1/scopes). You can also get them on-the-fly
-   with {@link snoowrap#getOauthScopeList}.
+   with {@link Snoowrap#getOauthScopeList}.
    * @param {string} options.redirectUri The URL where the user should be redirected after authenticating. This **must** be the
    same as the redirect URI that is configured for the reddit app. (If there is a mismatch, the returned URL will display an
    error page instead of an authentication form.)
@@ -137,7 +137,7 @@ export class Snoowrap {
    * @returns {string} A URL where the user can authenticate with the given options
    * @example
    *
-   * var authenticationUrl = snoowrap.getAuthUrl({
+   * var authenticationUrl = Snoowrap.getAuthUrl({
    *   clientId: 'foobarbazquuux',
    *   scope: ['identity', 'wikiread', 'wikiedit'],
    *   redirectUri: 'https://example.com/reddit_callback',
@@ -173,10 +173,10 @@ export class Snoowrap {
   /**
    * @summary Creates a snoowrap requester from an authorization code.
    * @desc An authorization code is the `code` value that appears in the querystring after a user authenticates with reddit and
-   is redirected. For more information, see {@link snoowrap.getAuthUrl}.
+   is redirected. For more information, see {@link Snoowrap.getAuthUrl}.
    *
    * The main use-case for this function is for running snoowrap in a browser. You can generate a URL with
-   {@link snoowrap.getAuthUrl} and send the user to that URL, and then use this function to create a requester when
+   {@link Snoowrap.getAuthUrl} and send the user to that URL, and then use this function to create a requester when
    the user is redirected back with an authorization code.
    * @param {object} options
    * @param {string} options.code The authorization code
@@ -190,13 +190,13 @@ export class Snoowrap {
    * @param {string} [options.endpointDomain='reddit.com'] The endpoint domain that the returned requester should be configured
    to use. If the user is authenticating on reddit.com (as opposed to some other site with a reddit-like API), you can omit this
    value.
-   * @returns {Promise<snoowrap>} A Promise that fulfills with a `snoowrap` instance
+   * @returns {Promise<Snoowrap>} A Promise that fulfills with a `Snoowrap` instance
    * @example
    *
    * // Get the `code` querystring param (assuming the user was redirected from reddit)
    * var code = new URL(window.location.href).searchParams.get('code');
    *
-   * snoowrap.fromAuthCode({
+   * Snoowrap.fromAuthCode({
    *   code: code,
    *   userAgent: 'My app',
    *   clientId: 'foobarbazquuux',
@@ -231,7 +231,7 @@ export class Snoowrap {
       if (response.error) {
         throw new errors.RequestError(`API Error: ${response.error} - ${response.error_description}`);
       }
-      // Use `new this` instead of `new snoowrap` to ensure that subclass instances can be returned
+      // Use `new this` instead of `new Snoowrap` to ensure that subclass instances can be returned
       const requester = new this({userAgent, clientId, clientSecret, ...response});
       requester.config({endpointDomain});
       return requester;
@@ -252,7 +252,7 @@ export class Snoowrap {
     };
   }
   /**
-  * @summary Creates a snoowrap requester from a "user-less" Authorization token
+  * @summary Creates a Snoowrap requester from a "user-less" Authorization token
   * @desc In some cases, 3rd party app clients may wish to make API requests without a user context. App clients can request
   * a "user-less" Authorization token via either the standard client_credentials grant, or the reddit specific
   * extension to this grant, https://oauth.reddit.com/grants/installed_client. Which grant type an app uses depends on
@@ -267,21 +267,21 @@ export class Snoowrap {
   * for "Installed" grant type, needs to be between 20-30 characters long. From the reddit docs: "reddit *may* choose to use
   * this ID to generate aggregate data about user counts. Clients that wish to remain anonymous should use the value
   * DO_NOT_TRACK_THIS_DEVICE."
-  * @param {string} [options.grantType=snoowrap.grantType.INSTALLED_CLIENT] The type of "user-less"
-  * token to use {@link snoowrap.grantType}
+  * @param {string} [options.grantType=Snoowrap.grantType.INSTALLED_CLIENT] The type of "user-less"
+  * token to use {@link Snoowrap.grantType}
   * @param {boolean} [options.permanent=true] If `true`, the app will have indefinite access. If `false`,
   access will expire after 1 hour.
   * @param {string} [options.endpointDomain='reddit.com'] The endpoint domain that the returned requester should be configured
   to use. If the user is authenticating on reddit.com (as opposed to some other site with a reddit-like API), you can omit this
   value.
-  * @returns {Promise<snoowrap>} A Promise that fulfills with a `snoowrap` instance
+  * @returns {Promise<Snoowrap>} A Promise that fulfills with a `Snoowrap` instance
   * @example
   *
-  * snoowrap.fromApplicationOnlyAuth({
+  * Snoowrap.fromApplicationOnlyAuth({
   *   userAgent: 'My app',
   *   clientId: 'foobarbazquuux',
   *   deviceId: 'unique id between 20-30 chars',
-  *   grantType: snoowrap.grantType.INSTALLED_CLIENT
+  *   grantType: Snoowrap.grantType.INSTALLED_CLIENT
   * }).then(r => {
   *   // Now we have a requester that can access reddit through a "user-less" Auth token
   *   return r.getHot().then(posts => {
@@ -289,11 +289,11 @@ export class Snoowrap {
   *   });
   * })
   *
-  * snoowrap.fromApplicationOnlyAuth({
+  * Snoowrap.fromApplicationOnlyAuth({
   *   userAgent: 'My app',
   *   clientId: 'foobarbazquuux',
   *   clientSecret: 'your web app secret',
-  *   grantType: snoowrap.grantType.CLIENT_CREDENTIALS
+  *   grantType: Snoowrap.grantType.CLIENT_CREDENTIALS
   * }).then(r => {
   *   // Now we have a requester that can access reddit through a "user-less" Auth token
   *   return r.getHot().then(posts => {
@@ -306,7 +306,7 @@ export class Snoowrap {
     clientId = requiredArg('clientId'),
     clientSecret,
     deviceId,
-    grantType = snoowrap.grantType.INSTALLED_CLIENT,
+    grantType = Snoowrap.grantType.INSTALLED_CLIENT,
     permanent = true,
     endpointDomain = 'reddit.com'
   }) {
@@ -324,18 +324,18 @@ export class Snoowrap {
       if (response.error) {
         throw new errors.RequestError(`API Error: ${response.error} - ${response.error_description}`);
       }
-      // Use `new this` instead of `new snoowrap` to ensure that subclass instances can be returned
+      // Use `new this` instead of `new Snoowrap` to ensure that subclass instances can be returned
       const requester = new this({userAgent, clientId, clientSecret, ...response});
       requester.config({endpointDomain});
       return requester;
     });
   }
   _newObject (objectType, content, _hasFetched = false) {
-    return Array.isArray(content) ? content : new snoowrap.objects[objectType](content, this, _hasFetched);
+    return Array.isArray(content) ? content : new Snoowrap.objects[objectType](content, this, _hasFetched);
   }
 
   /**
-   * @summary Retrieves or modifies the configuration options for this snoowrap instance.
+   * @summary Retrieves or modifies the configuration options for this Snoowrap instance.
    * @param {object} [options] A map of `{[config property name]: value}`. Note that any omitted config properties will simply
    retain whatever value they had previously. (In other words, if you only want to change one property, you only need to put
    that one property in this parameter. To get the current configuration without modifying anything, simply omit this
@@ -343,28 +343,28 @@ export class Snoowrap {
    * @param {string} [options.endpointDomain='reddit.com'] The endpoint where requests should be sent
    * @param {Number} [options.requestDelay=0] A minimum delay, in milliseconds, to enforce between API calls. If multiple
    api calls are requested during this timespan, they will be queued and sent one at a time. Setting this to more than 1000 will
-   ensure that reddit's ratelimit is never reached, but it will make things run slower than necessary if only a few requests
-   are being sent. If this is set to zero, snoowrap will not enforce any delay between individual requests. However, it will
-   still refuse to continue if reddit's enforced ratelimit (600 requests per 10 minutes) is exceeded.
+   ensure that Reddit's ratelimit is never reached, but it will make things run slower than necessary if only a few requests
+   are being sent. If this is set to zero, Snoowrap will not enforce any delay between individual requests. However, it will
+   still refuse to continue if Reddit's enforced ratelimit (600 requests per 10 minutes) is exceeded.
    * @param {Number} [options.requestTimeout=30000] A timeout for all OAuth requests, in milliseconds. If the reddit server
    fails to return a response within this amount of time, the Promise will be rejected with a timeout error.
-   * @param {boolean} [options.continueAfterRatelimitError=false] Determines whether snoowrap should queue API calls if
-   reddit's ratelimit is exceeded. If set to `true` when the ratelimit is exceeded, snoowrap will queue all further requests,
+   * @param {boolean} [options.continueAfterRatelimitError=false] Determines whether Snoowrap should queue API calls if
+   Reddit's ratelimit is exceeded. If set to `true` when the ratelimit is exceeded, Snoowrap will queue all further requests,
    and will attempt to send them again after the current ratelimit period expires (which happens every 10 minutes). If set
-   to `false`, snoowrap will simply throw an error when reddit's ratelimit is exceeded.
+   to `false`, Snoowrap will simply throw an error when reddit's ratelimit is exceeded.
    * @param {Number[]} [options.retryErrorCodes=[502, 503, 504, 522]] If reddit responds to an idempotent request with one of
-   these error codes, snoowrap will retry the request, up to a maximum of `max_retry_attempts` requests in total. (These
-   errors usually indicate that there was an temporary issue on reddit's end, and retrying the request has a decent chance of
+   these error codes, Snoowrap will retry the request, up to a maximum of `max_retry_attempts` requests in total. (These
+   errors usually indicate that there was an temporary issue on Reddit's end, and retrying the request has a decent chance of
    success.) This behavior can be disabled by simply setting this property to an empty array.
    * @param {Number} [options.maxRetryAttempts=3] See `retryErrorCodes`.
-   * @param {boolean} [options.warnings=true] snoowrap may occasionally log warnings, such as deprecation notices, to the
+   * @param {boolean} [options.warnings=true] Snoowrap may occasionally log warnings, such as deprecation notices, to the
    console. These can be disabled by setting this to `false`.
-   * @param {boolean} [options.debug=false] If set to true, snoowrap will print out potentially-useful information for debugging
+   * @param {boolean} [options.debug=false] If set to true, Snoowrap will print out potentially-useful information for debugging
    purposes as it runs.
-   * @param {object} [options.logger=console] By default, snoowrap will log any warnings and debug output to the console.
+   * @param {object} [options.logger=console] By default, Snoowrap will log any warnings and debug output to the console.
    A custom logger object may be supplied via this option; it must expose `warn`, `info`, `debug`, and `trace` functions.
-   * @param {boolean} [options.proxies=true] Setting this to `false` disables snoowrap's method-chaining feature. This causes
-   the syntax for using snoowrap to become a bit heavier, but allows for consistency between environments that support the ES6
+   * @param {boolean} [options.proxies=true] Setting this to `false` disables Snoowrap's method-chaining feature. This causes
+   the syntax for using Snoowrap to become a bit heavier, but allows for consistency between environments that support the ES6
    `Proxy` object and environments that don't. This option is a no-op in environments that don't support the `Proxy` object,
    since method chaining is always disabled in those environments. Note, changing this setting must be done before making
    any requests.
@@ -452,7 +452,7 @@ export class Snoowrap {
    * r.getSubmission('2np694')
    * // => Submission { name: 't3_2np694' }
    * r.getSubmission('2np694').title.then(console.log)
-   * // => 'What tasty food would be distusting if eaten over rice?'
+   * // => 'What tasty food would be disgusting if eaten over rice?'
    */
   getSubmission (submissionId) {
     return this._newObject('Submission', {name: addFullnamePrefix(submissionId, 't3_')});
@@ -758,7 +758,7 @@ export class Snoowrap {
     return this._submit({
       ...options,
       kind: 'crosspost',
-      crosspost_fullname: options.originalPost instanceof snoowrap.objects.Submission
+      crosspost_fullname: options.originalPost instanceof Snoowrap.objects.Submission
         ? options.originalPost.name
         : addFullnamePrefix(options.originalPost, 't3_')
     });
@@ -893,7 +893,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
     }
 
     const prefixedIds = ids.map(id => {
-      if (id instanceof snoowrap.objects.Submission || id instanceof snoowrap.objects.Comment) {
+      if (id instanceof Snoowrap.objects.Submission || id instanceof Snoowrap.objects.Comment) {
         return id.name;
       } else if (typeof id === 'string') {
         if (!/t(1|3)_/g.test(ids)) {
@@ -909,7 +909,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
 
   /**
    * @summary Gets a single random Submission.
-   * @desc **Note**: This function will not work when snoowrap is running in a browser, because the reddit server sends a
+   * @desc **Note**: This function will not work when Snoowrap is running in a browser, because the reddit server sends a
    redirect which cannot be followed by a CORS request.
    * @param {string} [subredditName] The subreddit to get the random submission. If not provided, the post is fetched from
    the front page of reddit.
@@ -1258,7 +1258,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
    *
    * r.markMessagesAsRead(['51shsd', '51shxv'])
    *
-   * // To reference a comment by ID, be sure to use the `t1_` prefix, otherwise snoowrap will be unable to distinguish the
+   * // To reference a comment by ID, be sure to use the `t1_` prefix, otherwise Snoowrap will be unable to distinguish the
    * // comment ID from a PrivateMessage ID.
    * r.markMessagesAsRead(['t5_51shsd', 't1_d3zhb5k'])
    *
@@ -1280,7 +1280,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
    *
    * r.markMessagesAsUnread(['51shsd', '51shxv'])
    *
-   * // To reference a comment by ID, be sure to use the `t1_` prefix, otherwise snoowrap will be unable to distinguish the
+   * // To reference a comment by ID, be sure to use the `t1_` prefix, otherwise Snoowrap will be unable to distinguish the
    * // comment ID from a PrivateMessage ID.
    * r.markMessagesAsUnread(['t5_51shsd', 't1_d3zhb5k'])
    *
@@ -1340,12 +1340,12 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
   }) {
     let parsedTo = to;
     let parsedFromSr = fromSubreddit;
-    if (to instanceof snoowrap.objects.RedditUser) {
+    if (to instanceof Snoowrap.objects.RedditUser) {
       parsedTo = to.name;
-    } else if (to instanceof snoowrap.objects.Subreddit) {
+    } else if (to instanceof Snoowrap.objects.Subreddit) {
       parsedTo = `/r/${to.display_name}`;
     }
-    if (fromSubreddit instanceof snoowrap.objects.Subreddit) {
+    if (fromSubreddit instanceof Snoowrap.objects.Subreddit) {
       parsedFromSr = fromSubreddit.display_name;
     } else if (typeof fromSubreddit === 'string') {
       parsedFromSr = fromSubreddit.replace(/^\/?r\//, ''); // Convert '/r/subreddit_name' to 'subreddit_name'
@@ -1407,7 +1407,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
    * // ]
    */
   search (options) {
-    if (options.subreddit instanceof snoowrap.objects.Subreddit) {
+    if (options.subreddit instanceof Snoowrap.objects.Subreddit) {
       options.subreddit = options.subreddit.display_name;
     }
     defaults(options, {restrictSr: true, syntax: 'plain'});
@@ -1705,7 +1705,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
 
   /**
    * @summary Checks whether a given username is available for registration
-   * @desc **Note:** This function will not work when snoowrap is running in a browser, due to an issue with reddit's CORS
+   * @desc **Note:** This function will not work when Snoowrap is running in a browser, due to an issue with reddit's CORS
    settings.
    * @param {string} name The username in question
    * @returns {Promise} A Promise that fulfills with a Boolean (`true` or `false`)
@@ -1873,8 +1873,8 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
         }
         return this._populate(value);
       });
-      if (result.length === 2 && result[0] instanceof snoowrap.objects.Listing
-        && result[0][0] instanceof snoowrap.objects.Submission && result[1] instanceof snoowrap.objects.Listing) {
+      if (result.length === 2 && result[0] instanceof Snoowrap.objects.Listing
+        && result[0][0] instanceof Snoowrap.objects.Submission && result[1] instanceof Snoowrap.objects.Listing) {
         if (result[1]._more && !result[1]._more.link_id) {
           result[1]._more.link_id = result[0][0].name;
         }
@@ -1889,7 +1889,7 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
   _getListing ({uri, qs = {}, ...options}) {
     /* When the response type is expected to be a Listing, add a `count` parameter with a very high number.
     This ensures that reddit returns a `before` property in the resulting Listing to enable pagination.
-    (Aside from the additional parameter, this function is equivalent to snoowrap.prototype._get) */
+    (Aside from the additional parameter, this function is equivalent to Snoowrap.prototype._get) */
     const mergedQuery = {count: 9999, ...qs};
     return qs.limit || !isEmpty(options)
       ? this._newObject('Listing', {_query: mergedQuery, _uri: uri, ...options}).fetchMore(qs.limit || MAX_LISTING_ITEMS)
@@ -1912,8 +1912,8 @@ can get a post and a comment   *  @returns {Promise<Listing<Submission|Comment>>
   /**
    * @summary In browsers, restores the `window.snoowrap` property to whatever it was before this instance of snoowrap was
    loaded. This is a no-op in Node.
-   * @returns This instance of the snoowrap constructor
-   * @example var snoowrap = window.snoowrap.noConflict();
+   * @returns This instance of the Snoowrap constructor
+   * @example var snoowrap = window.Snoowrap.noConflict();
    */
   static noConflict () {
     if (isBrowser) {
@@ -1927,7 +1927,7 @@ function identity (value) {
   return value;
 }
 
-defineInspectFunc(snoowrap.prototype, function () {
+defineInspectFunc(Snoowrap.prototype, function () {
   // Hide confidential information (tokens, client IDs, etc.), as well as private properties, from the console.log output.
   const keysForHiddenValues = ['clientSecret', 'refreshToken', 'accessToken', 'password'];
   const formatted = mapValues(omitBy(this, (value, key) => typeof key === 'string' && key.startsWith('_')), (value, key) => {
@@ -1940,13 +1940,13 @@ const classFuncDescriptors = {configurable: true, writable: true};
 
 /* Add the request_handler functions (oauth_request, credentialed_client_request, etc.) to the snoowrap prototype. Use
 Object.defineProperties to ensure that the properties are non-enumerable. */
-Object.defineProperties(snoowrap.prototype, mapValues(requestHandler, func => ({value: func, ...classFuncDescriptors})));
+Object.defineProperties(Snoowrap.prototype, mapValues(requestHandler, func => ({value: func, ...classFuncDescriptors})));
 
 HTTP_VERBS.forEach(method => {
-  /* Define method shortcuts for each of the HTTP verbs. i.e. `snoowrap.prototype._post` is the same as `oauth_request` except
+  /* Define method shortcuts for each of the HTTP verbs. i.e. `Snoowrap.prototype._post` is the same as `oauth_request` except
   that the HTTP method defaults to `post`, and the result is promise-wrapped. Use Object.defineProperty to ensure that the
   properties are non-enumerable. */
-  Object.defineProperty(snoowrap.prototype, `_${method}`, {
+  Object.defineProperty(Snoowrap.prototype, `_${method}`, {
     value (options) {
       return this._promiseWrap(this.oauthRequest({...options, method}));
     }, ...classFuncDescriptors
@@ -1955,27 +1955,27 @@ HTTP_VERBS.forEach(method => {
 
 /* `objects` will be an object containing getters for each content type, due to the way objects are exported from
 objects/index.js. To unwrap these getters into direct properties, use lodash.mapValues with an identity function. */
-snoowrap.objects = mapValues(objects, value => value);
+Snoowrap.objects = mapValues(objects, value => value);
 
 forOwn(KINDS, value => {
-  snoowrap.objects[value] = snoowrap.objects[value] || class extends objects.RedditContent {
+  Snoowrap.objects[value] = Snoowrap.objects[value] || class extends objects.RedditContent {
   };
-  Object.defineProperty(snoowrap.objects[value], '_name', {value, configurable: true});
+  Object.defineProperty(Snoowrap.objects[value], '_name', {value, configurable: true});
 });
 
 // Alias all functions on snoowrap's prototype and snoowrap's object prototypes in snake_case.
-values(snoowrap.objects).concat(snoowrap).map(func => func.prototype).forEach(funcProto => {
+values(Snoowrap.objects).concat(Snoowrap).map(func => func.prototype).forEach(funcProto => {
   Object.getOwnPropertyNames(funcProto)
     .filter(name => !name.startsWith('_') && name !== snakeCase(name) && typeof funcProto[name] === 'function')
     .forEach(name => Object.defineProperty(funcProto, snakeCase(name), {value: funcProto[name], ...classFuncDescriptors}));
 });
 
-snoowrap.errors = errors;
-snoowrap.version = VERSION;
+Snoowrap.errors = errors;
+Snoowrap.version = VERSION;
 
 if (!module.parent && isBrowser) { // check if the code is being run in a browser through browserify, etc.
-  snoowrap._previousSnoowrap = global[MODULE_NAME];
-  global[MODULE_NAME] = snoowrap;
+  Snoowrap._previousSnoowrap = global[MODULE_NAME];
+  global[MODULE_NAME] = Snoowrap;
 }
 
-module.exports = snoowrap;
+module.exports = Snoowrap;
