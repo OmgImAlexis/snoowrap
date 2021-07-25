@@ -1977,5 +1977,3 @@ if (!module.parent && isBrowser) { // check if the code is being run in a browse
   Snoowrap._previousSnoowrap = global[MODULE_NAME];
   global[MODULE_NAME] = Snoowrap;
 }
-
-module.exports = Snoowrap;
