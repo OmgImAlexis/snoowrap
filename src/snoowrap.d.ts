@@ -3,8 +3,10 @@
 //  TheAppleFreak <https://github.com/TheAppleFreak>
 //  Willy Liu <https://github.com/willwull>
 
-import { Options as RequestOptions } from 'request';
+// import { Options as RequestOptions } from 'request';
 import { $FIXME } from './fix-me';
+
+type RequestOptions = $FIXME;
 
 import {
   Comment,
