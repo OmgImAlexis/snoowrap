@@ -30,7 +30,7 @@ const api_type = 'json';
  [API rules](https://github.com/reddit/reddit/wiki/API).) These properties primarily exist for internal use, but they are
  exposed since they are useful externally as well.
  */
-export class snoowrap {
+export class Snoowrap {
   /**
    * @summary Constructs a new requester.
    * @desc You should use the snoowrap constructor if you are able to authorize a reddit account in advance (e.g. for a Node.js
