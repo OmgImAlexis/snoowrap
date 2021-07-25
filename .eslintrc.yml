@@ -93,7 +93,7 @@ rules:
   valid-typeof: [error, {requireStringLiterals: true}]
   wrap-iife: error
   yoda: error
-  import/prefer-default-export: error
+  import/prefer-default-export: off
   import/newline-after-import: error
   import/no-unassigned-import: error
   promise/catch-or-return: error
