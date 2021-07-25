@@ -24,7 +24,7 @@ import {
   SubredditSettings,
 } from './objects';
 
-export default class Snoowrap {
+export class Snoowrap {
   static getAuthUrl(options: AuthUrlOptions): string;
   static fromAuthCode(options: AuthCodeOptions): Promise<Snoowrap>;
   static fromApplicationOnlyAuth(options: AuthOnlyOptions): Promise<Snoowrap>;
