@@ -2,7 +2,7 @@ import ava, { TestInterface } from 'ava';
 import { RequiredArgumentError } from '../src/errors/required-argument-erorr';
 import { Comment } from '../src/objects/comment';
 import { Submission } from '../src/objects/submission';
-import { SnooWrapped } from '../src/snoowrapped';
+import { SnooWrapped } from '../src/snoo-wrapped';
 import { credentials } from './_helpers/credentials';
 
 const test = ava as TestInterface<{

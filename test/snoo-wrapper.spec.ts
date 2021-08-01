@@ -1,7 +1,7 @@
 import ava, { TestInterface } from 'ava';
 import { MissingCredentialsError } from '../src/errors/missing-credentials-error';
 import { RequiredArgumentError } from '../src/errors/required-argument-erorr';
-import { SnooWrapped } from '../src/snoowrapped';
+import { SnooWrapped } from '../src/snoo-wrapped';
 import { credentials, userAgent, accessToken, clientId, clientSecret, refreshToken, username, password } from './_helpers/credentials';
 
 const test = ava as TestInterface<{

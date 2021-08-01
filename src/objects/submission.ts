@@ -1,4 +1,4 @@
-import { SnooWrapped } from "../snoowrapped";
+import { SnooWrapped } from "../snoo-wrapped";
 import { SubredditType } from "../types";
 import { Comment, RawComment } from "./comment";
 import { RedditContent } from "./reddit-content";
@@ -37,7 +37,53 @@ interface RawResult {
     }
 };
 
-export class Submission extends RedditContent {
+export class Submission<Data extends {
+    name: string;
+    subreddit?: Subreddit;
+    comments?: Comment[];
+    title?: string;
+    author?: RedditUser;
+    votes?: {
+        up?: number;
+        down?: number;
+    };
+    created?: Date;
+    edited?: Date;
+    gilded?: number;
+    subredditType?: SubredditType;
+    domain?: string;
+    body?: string;
+    archived?: boolean;
+    nsfw?: boolean;
+    spoiler?: boolean;
+    hidden?: boolean;
+    permalink?: string;
+    stickied?: boolean;
+    subscribers?: number;
+} = {
+    name: string;
+    subreddit?: Subreddit;
+    comments?: Comment[];
+    title?: string;
+    author?: RedditUser;
+    votes?: {
+        up?: number;
+        down?: number;
+    };
+    created?: Date;
+    edited?: Date;
+    gilded?: number;
+    subredditType?: SubredditType;
+    domain?: string;
+    body?: string;
+    archived?: boolean;
+    nsfw?: boolean;
+    spoiler?: boolean;
+    hidden?: boolean;
+    permalink?: string;
+    stickied?: boolean;
+    subscribers?: number;
+}> extends RedditContent<Data> {
     public subreddit?: Subreddit;
     public comments?: Comment[];
     public title?: string;
@@ -57,30 +103,7 @@ export class Submission extends RedditContent {
     public stickied?: boolean;
     public subscribers?: number;
     
-    constructor(data: {
-        name: string;
-        subreddit?: Subreddit;
-        comments?: Comment[];
-        title?: string;
-        author?: RedditUser;
-        votes?: {
-            up?: number;
-            down?: number;
-        };
-        created?: Date;
-        edited?: Date;
-        gilded?: number;
-        subredditType?: SubredditType;
-        domain?: string;
-        body?: string;
-        archived?: boolean;
-        nsfw?: boolean;
-        spoiler?: boolean;
-        hidden?: boolean;
-        permalink?: string;
-        stickied?: boolean;
-        subscribers?: number;
-    }, snooWrapped: SnooWrapped) {
+    constructor(data: Data, snooWrapped: SnooWrapped) {
         super(data, snooWrapped);
         this.subreddit = data.subreddit;
         this.comments = data.comments;
@@ -120,7 +143,7 @@ export class Submission extends RedditContent {
             })
             .then(([, comments]: [RawSubmission, RawComment]) => comments.data.children.map(child => child.data));
 
-        const submission = new Submission({
+        return new Submission({
             ...this.data,
             author: new RedditUser({ name: submissionData.author }, this.snooWrapped),
             subreddit: new Subreddit({ name: submissionData.subreddit, subscribers: submissionData.subreddit_subscribers }, this.snooWrapped),
@@ -143,8 +166,6 @@ export class Submission extends RedditContent {
             permalink: submissionData.permalink,
             stickied: submissionData.stickied,
         }, this.snooWrapped);
-
-        return submission;
     }
 
     /**

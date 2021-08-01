@@ -1,4 +1,4 @@
-import { SnooWrapped } from "../snoowrapped";
+import { SnooWrapped } from "../snoo-wrapped";
 import { SubredditType } from "../types";
 import { RedditContent } from "./reddit-content";import { RedditUser } from "./reddit-user";
 import { Submission } from "./submission";
@@ -29,7 +29,37 @@ export type RawComment = {
     }
 };
 
-export class Comment extends RedditContent {
+export class Comment<Data extends {
+    name: string;
+    submission?: Submission;
+    subreddit?: Subreddit;
+    body?: string;
+    created?: Date;
+    edited?: Date;
+    gilded?: number;
+    archived?: boolean;
+    subredditType?: SubredditType;
+    author?: RedditUser;
+    votes?: {
+        up?: number;
+        down?: number;
+    };
+} = {
+    name: string;
+    submission?: Submission;
+    subreddit?: Subreddit;
+    body?: string;
+    created?: Date;
+    edited?: Date;
+    gilded?: number;
+    archived?: boolean;
+    subredditType?: SubredditType;
+    author?: RedditUser;
+    votes?: {
+        up?: number;
+        down?: number;
+    };
+}> extends RedditContent<Data> {
     public submission?: Submission;
     public body?: string;
     public created?: Date;
@@ -41,22 +71,7 @@ export class Comment extends RedditContent {
     public author: any;
     public votes: { up?: number; down?: number; };
     
-    constructor(data: {
-        name: string;
-        submission?: Submission;
-        subreddit?: Subreddit;
-        body?: string;
-        created?: Date;
-        edited?: Date;
-        gilded?: number;
-        archived?: boolean;
-        subredditType?: SubredditType;
-        author?: RedditUser;
-        votes?: {
-            up?: number;
-            down?: number;
-        };
-    }, snooWrapped: SnooWrapped) {
+    constructor(data: Data, snooWrapped: SnooWrapped) {
         super(data, snooWrapped);
 
         this.submission = data.submission;

@@ -2,15 +2,15 @@ import util from 'util';
 import fetch, { Headers } from 'node-fetch';
 import mergeDeep from 'merge-deep';
 import { RequiredArgumentError } from '../errors/required-argument-erorr';
-import { SnooWrapped } from '../snoowrapped';
+import { SnooWrapped } from '../snoo-wrapped';
 import { URL, URLSearchParams } from 'url';
 
-export class RedditContent {
+export class RedditContent<Data extends { name: string; }> {
     public readonly name: string;
     protected snooWrapped: SnooWrapped;
-    protected data: any;
+    protected data: Data;
 
-    constructor(data: { name: string; }, snooWrapped: SnooWrapped) {
+    constructor(data: Data, snooWrapped: SnooWrapped) {
         if (!data.name) throw new RequiredArgumentError('data.name');
         if (!snooWrapped) throw new RequiredArgumentError('snooWrapped');
 

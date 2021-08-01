@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © 2016 @not-an-aardvark
+Copyright © 2021 OmgImAlexis
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

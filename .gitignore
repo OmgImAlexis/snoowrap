@@ -12,3 +12,4 @@ oauth_info.json
 old_src
 old_test
 .vscode
+.nyc_output

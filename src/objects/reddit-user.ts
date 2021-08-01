@@ -1,4 +1,4 @@
-import { SnooWrapped } from "../snoowrapped";
+import { SnooWrapped } from "../snoo-wrapped";
 import { RedditContent } from "./reddit-content";
 
 type MissingEndpoint = { message: 'Not Found'; error: number; };
@@ -24,7 +24,27 @@ interface RawResult {
     data: RawRedditUser
 };
 
-export class RedditUser extends RedditContent {
+export class RedditUser<Data extends {
+    name: string;
+    id?: string;
+    isVerified?: boolean;
+    isGold?: boolean;
+    isMod?: boolean;
+    hasVerifiedEmail?: boolean;
+    karma?: { awardee?: number; awarder?: number; link?: number; comment?: number; total?: number; };
+    acceptsFollowers?: boolean;
+    created?: Date;
+} = {
+    name: string;
+    id?: string;
+    isVerified?: boolean;
+    isGold?: boolean;
+    isMod?: boolean;
+    hasVerifiedEmail?: boolean;
+    karma?: { awardee?: number; awarder?: number; link?: number; comment?: number; total?: number; };
+    acceptsFollowers?: boolean;
+    created?: Date;
+}> extends RedditContent<Data> {
     public id?: string;
     public isVerified?: boolean;
     public isGold?: boolean;
@@ -34,17 +54,7 @@ export class RedditUser extends RedditContent {
     public acceptsFollowers?: boolean;
     public created?: Date;
 
-    constructor(data: {
-        name: string;
-        id?: string;
-        isVerified?: boolean;
-        isGold?: boolean;
-        isMod?: boolean;
-        hasVerifiedEmail?: boolean;
-        karma?: { awardee?: number; awarder?: number; link?: number; comment?: number; total?: number; };
-        acceptsFollowers?: boolean;
-        created?: Date;
-    }, snooWrapped: SnooWrapped) {
+    constructor(data: Data, snooWrapped: SnooWrapped) {
         super(data, snooWrapped);
 
         this.id = data.id;
