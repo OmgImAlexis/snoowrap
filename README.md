@@ -2,9 +2,13 @@
 
 A fully-featured wrapper for the Reddit API.
 
+---
+
 ## Note
 This is based on what I've learnt from reading the source of SnooWrap.  
 SnooWrap works fine it's just a tad outdated and doesn't have the best Typescript integration.
+
+---
 
 ### Features
 
@@ -17,39 +21,6 @@ SnooWrap works fine it's just a tad outdated and doesn't have the best Typescrip
 * Snoowrapped will retry its request a few times if reddit returns an error due to its servers being overloaded.
 
 These features ensure that you can write less boilerplate code and focus more on actually doing what you want to do.
-
----
-
-Snoowrapped's methods are designed to be as simple and consistent as possible. So the following expression:
-
-```js
-r.getSubmission('2np694').body
-```
-...will return a Promise. So will this one:
-```js
- r.getSubmission('2np694').author.name
- // --> returns a Promise for the string 'DO_U_EVN_SPAGHETTI'
- // (this submission's author's name)
- ```
-The above will return a Promise for the author's name, without having to deal with callback hell or `.then` statements.
-
-```js
-r.getSubmission('2np694').subreddit.getModerators()[0].name
-// --> returns a Promise for the string 'krispykrackers'
-// (this submission's subreddit's first mod's name)
-```
-...or chain actions together with fluent syntax:
-
-```js
-r.getSubreddit('snoowrap')
-  .submitSelfpost({title: 'Discussion Thread', text: 'Hello! This is a thread'})
-  .sticky()
-  .distinguish()
-  .ignoreReports()
-  .assignFlair({text: 'Exciting Flair Text', css_class: 'modpost'})
-```
-
-snoowrap works on Node.js 4+, as well as most common browsers.
 
 ---
 
@@ -95,12 +66,12 @@ Printing a list of the titles on the front page
 sW.getHot().map(post => post.title).then(console.log);
 ```
 
-// Extracting every comment on a thread
+Extracting every comment on a thread
 ```ts
 sW.getSubmission('4j8p6d').expandReplies({ limit: Infinity, depth: Infinity }).then(console.log);
 ```
 
-// Automating moderation tasks
+Automating moderation tasks
 ```ts
 const queueItems = await sW.getSubreddit('some_subreddit_name').getModqueue({ limit: 100 }).fetch();
 queueItems.filter(someRemovalCondition).forEach(flaggedItem => {
@@ -109,7 +80,7 @@ queueItems.filter(someRemovalCondition).forEach(flaggedItem => {
 });
 ```
 
-// Automatically creating a stickied thread for a moderated subreddit
+Automatically creating a stickied thread for a moderated subreddit
 ```ts
 const submission = sW.getSubreddit('some_subreddit_name').submitSelfpost({title: 'Daily thread', text: 'Discuss things here'});
 await submission.sticky();
@@ -149,6 +120,8 @@ OR
 ```js
 const { SnooWrapped } = require('snoowrapped');
 ```
+
+---
 
 ### Development
 `npm run test`  
