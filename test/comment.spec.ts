@@ -2,34 +2,34 @@ import ava, { TestInterface } from 'ava';
 import { RequiredArgumentError } from '../src/errors/required-argument-erorr';
 import { Comment } from '../src/objects/comment';
 import { Submission } from '../src/objects/submission';
-import { SnooWrapper } from '../src/snoo-wrapper';
+import { SnooWrapped } from '../src/snoowrapped';
 import { credentials } from './_helpers/credentials';
 
 const test = ava as TestInterface<{
-    snooWrapper: SnooWrapper;
+    snooWrapped: SnooWrapped;
 }>;
 
 test.before(t => {
     t.context = {
-        snooWrapper: new SnooWrapper(credentials)
+        snooWrapped: new SnooWrapped(credentials)
     };
 })
 
 test.serial('constructor', t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(() => {
-        new Comment({ name: 'cmfwyl2' }, snooWrapper);
+        new Comment({ name: 'cmfwyl2' }, snooWrapped);
     });
 
     // Missing "name"
     t.throws(() => {
         // @ts-expect-error
-        new Submission({}, snooWrapper);
+        new Submission({}, snooWrapped);
     }, { instanceOf: RequiredArgumentError });
 
-    // Missing "snooWrapper"
+    // Missing "snooWrapped"
     t.throws(() => {
         // @ts-expect-error
         new Submission({});
@@ -37,15 +37,15 @@ test.serial('constructor', t => {
 });
 
 test.serial('fetch()', async t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(async () => {
-        await snooWrapper.getComment('c0b6xx0').fetch();
+        await snooWrapped.getComment('c0b6xx0').fetch();
     });
 
     // Returns an unfetched "Comment"
-    const comment = snooWrapper.getComment('c0b6xx0');
+    const comment = snooWrapped.getComment('c0b6xx0');
     t.not(comment, undefined);
     t.true(comment instanceof Comment);
     t.is(comment.name, 't1_c0b6xx0');

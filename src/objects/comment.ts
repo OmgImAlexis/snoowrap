@@ -1,4 +1,4 @@
-import { SnooWrapper } from "../snoo-wrapper";
+import { SnooWrapped } from "../snoowrapped";
 import { SubredditType } from "../types";
 import { RedditContent } from "./reddit-content";import { RedditUser } from "./reddit-user";
 import { Submission } from "./submission";
@@ -56,8 +56,8 @@ export class Comment extends RedditContent {
             up?: number;
             down?: number;
         };
-    }, snooWrapper: SnooWrapper) {
-        super(data, snooWrapper);
+    }, snooWrapped: SnooWrapped) {
+        super(data, snooWrapped);
 
         this.submission = data.submission;
         this.subreddit = data.subreddit;
@@ -82,8 +82,8 @@ export class Comment extends RedditContent {
 
         return new Comment({
             ...this.data,
-            submission: new Submission({ name: commentData.parent_id }, this.snooWrapper),
-            author: new RedditUser({ name: commentData.author }, this.snooWrapper),
+            submission: new Submission({ name: commentData.parent_id }, this.snooWrapped),
+            author: new RedditUser({ name: commentData.author }, this.snooWrapped),
             subreddit: commentData.subreddit,
             votes: {
                 up: commentData.ups,
@@ -95,14 +95,14 @@ export class Comment extends RedditContent {
             subredditType: commentData.subreddit_type,
             body: commentData.body,
             archived: commentData.archived
-        }, this.snooWrapper);
+        }, this.snooWrapped);
 
         // const submissionData = (data as RawResult)[0].data.children[0].data;
 
         // return new Comment({
         //     ...this.data,
-        //     submission: new Submission({ name: submissionData.name }, this.snooWrapper)
-        // }, this.snooWrapper);
+        //     submission: new Submission({ name: submissionData.name }, this.snooWrapped)
+        // }, this.snooWrapped);
     }
 
     protected get uri() {

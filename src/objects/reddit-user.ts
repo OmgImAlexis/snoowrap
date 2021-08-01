@@ -1,4 +1,4 @@
-import { SnooWrapper } from "../snoo-wrapper";
+import { SnooWrapped } from "../snoowrapped";
 import { RedditContent } from "./reddit-content";
 
 type MissingEndpoint = { message: 'Not Found'; error: number; };
@@ -44,8 +44,8 @@ export class RedditUser extends RedditContent {
         karma?: { awardee?: number; awarder?: number; link?: number; comment?: number; total?: number; };
         acceptsFollowers?: boolean;
         created?: Date;
-    }, snooWrapper: SnooWrapper) {
-        super(data, snooWrapper);
+    }, snooWrapped: SnooWrapped) {
+        super(data, snooWrapped);
 
         this.id = data.id;
         this.isVerified = data.isVerified;
@@ -85,7 +85,7 @@ export class RedditUser extends RedditContent {
             },
             acceptsFollowers: redditUserData.accept_followers,
             created: new Date(redditUserData.created),
-        }, this.snooWrapper);
+        }, this.snooWrapped);
     }
 
     protected get uri() {

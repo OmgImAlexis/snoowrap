@@ -2,24 +2,24 @@ import util from 'util';
 import fetch, { Headers } from 'node-fetch';
 import mergeDeep from 'merge-deep';
 import { RequiredArgumentError } from '../errors/required-argument-erorr';
-import { SnooWrapper } from '../snoo-wrapper';
+import { SnooWrapped } from '../snoowrapped';
 import { URL, URLSearchParams } from 'url';
 
 export class RedditContent {
     public readonly name: string;
-    protected snooWrapper: SnooWrapper;
+    protected snooWrapped: SnooWrapped;
     protected data: any;
 
-    constructor(data: { name: string; }, snooWrapper: SnooWrapper) {
+    constructor(data: { name: string; }, snooWrapped: SnooWrapped) {
         if (!data.name) throw new RequiredArgumentError('data.name');
-        if (!snooWrapper) throw new RequiredArgumentError('snooWrapper');
+        if (!snooWrapped) throw new RequiredArgumentError('snooWrapped');
 
         // Save data
         this.data = data;
         this.name = data.name;
 
-        // Save SnooWrapper instance
-        this.snooWrapper = snooWrapper;
+        // Save SnooWrapped instance
+        this.snooWrapped = snooWrapped;
     }
 
     [util.inspect.custom]() {
@@ -29,7 +29,7 @@ export class RedditContent {
         // Strip off protected fields
         const that = this as any;
         delete that.data;
-        delete that.snooWrapper;
+        delete that.snooWrapped;
         return that;
     }
 
@@ -49,25 +49,25 @@ export class RedditContent {
     private async _updateAccessToken () {
         // If the current access token is missing or expired, and it is possible to get a new one, do so.
         if (
-            (!this.snooWrapper.credentials.accessToken || Date.now() > (this.snooWrapper.credentials.tokenExpiration?.getTime() || 0)) &&
-            (this.snooWrapper.credentials.refreshToken || (this.snooWrapper.credentials.username && this.snooWrapper.credentials.password))
+            (!this.snooWrapped.credentials.accessToken || Date.now() > (this.snooWrapped.credentials.tokenExpiration?.getTime() || 0)) &&
+            (this.snooWrapped.credentials.refreshToken || (this.snooWrapped.credentials.username && this.snooWrapped.credentials.password))
         ) {            
             // Build headers
             const headers = new Headers();
-            headers.append("Authorization", `Basic ${Buffer.from(`${this.snooWrapper.credentials.clientId}:${this.snooWrapper.credentials.clientSecret}`).toString('base64')}`);
+            headers.append("Authorization", `Basic ${Buffer.from(`${this.snooWrapped.credentials.clientId}:${this.snooWrapped.credentials.clientSecret}`).toString('base64')}`);
             headers.append("User-Agent", "pheonix_starship API/0.0.1 by u/pheonix_starship");
             headers.append("Content-Type", "application/x-www-form-urlencoded");
 
             // Build body
             const body = new URLSearchParams();
             body.append('scope', '*');
-            if (this.snooWrapper.credentials.refreshToken) {
+            if (this.snooWrapped.credentials.refreshToken) {
                 body.append('grant_type', 'refresh_token');
-                body.append('refresh_token', this.snooWrapper.credentials.refreshToken);
+                body.append('refresh_token', this.snooWrapped.credentials.refreshToken);
             } else {
                 body.append('grant_type', 'password');
-                body.append('username', this.snooWrapper.credentials.username as string);
-                body.append('password', this.snooWrapper.credentials.password as string);
+                body.append('username', this.snooWrapped.credentials.username as string);
+                body.append('password', this.snooWrapped.credentials.password as string);
             }
 
             // Send request
@@ -85,16 +85,16 @@ export class RedditContent {
             }
 
             // Save access token
-            this.snooWrapper.credentials.accessToken = response.access_token;
-            this.snooWrapper.credentials.tokenExpiration = new Date(Date.now() + (response.expires_in * 1000));
-            this.snooWrapper.credentials.scope = response.scope;
+            this.snooWrapped.credentials.accessToken = response.access_token;
+            this.snooWrapped.credentials.tokenExpiration = new Date(Date.now() + (response.expires_in * 1000));
+            this.snooWrapped.credentials.scope = response.scope;
 
             // Return the newly saved token
             return response.access_token as string;
         }
 
         // Otherwise, just return the existing token.
-        return this.snooWrapper.credentials.accessToken;
+        return this.snooWrapped.credentials.accessToken;
     }
 
     protected async _fetch(uri: string, { query, ...options }: Parameters<typeof fetch>[1] & { query?: Record<string, any>; } = {}, attempts = 1) {
@@ -110,7 +110,7 @@ export class RedditContent {
         // Resolve options
         const opts = mergeDeep({
             headers: {
-                'User-Agent': this.snooWrapper.userAgent,
+                'User-Agent': this.snooWrapped.userAgent,
                 'Authorization': `Bearer ${accessToken}`
             }
         }, options);

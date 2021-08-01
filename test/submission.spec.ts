@@ -1,34 +1,34 @@
 import ava, { TestInterface } from 'ava';
 import { RequiredArgumentError } from '../src/errors/required-argument-erorr';
 import { Submission } from '../src/objects/submission';
-import { SnooWrapper } from '../src/snoo-wrapper';
+import { SnooWrapped } from '../src/snoowrapped';
 import { credentials } from './_helpers/credentials';
 
 const test = ava as TestInterface<{
-    snooWrapper: SnooWrapper;
+    snooWrapped: SnooWrapped;
 }>;
 
 test.before(t => {
     t.context = {
-        snooWrapper: new SnooWrapper(credentials)
+        snooWrapped: new SnooWrapped(credentials)
     };
 })
 
 test.serial('constructor', t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(() => {
-        new Submission({ name: '2np694' }, snooWrapper);
+        new Submission({ name: '2np694' }, snooWrapped);
     });
 
     // Missing "name"
     t.throws(() => {
         // @ts-expect-error
-        new Submission({}, snooWrapper);
+        new Submission({}, snooWrapped);
     }, { instanceOf: RequiredArgumentError });
 
-    // Missing "snooWrapper"
+    // Missing "snooWrapped"
     t.throws(() => {
         // @ts-expect-error
         new Submission({});
@@ -36,15 +36,15 @@ test.serial('constructor', t => {
 });
 
 test.serial('fetch()', async t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(async () => {
-        await snooWrapper.getSubmission('2np694').fetch();
+        await snooWrapped.getSubmission('2np694').fetch();
     });
 
     // Returns an unfetched "Submission"
-    const submission = snooWrapper.getSubmission('2np694');
+    const submission = snooWrapped.getSubmission('2np694');
     t.not(submission, undefined);
     t.true(submission instanceof Submission);
     t.is(submission.name, 't3_2np694');
@@ -83,10 +83,10 @@ test.serial('fetch()', async t => {
 });
 
 test.serial('markNsfw()', async t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // Get submission
-    const submission = snooWrapper.getSubmission('ovklvg');
+    const submission = snooWrapped.getSubmission('ovklvg');
     t.is(submission.nsfw, undefined);
 
     // Mark NSFW
@@ -101,10 +101,10 @@ test.serial('markNsfw()', async t => {
 });
 
 test.serial('unmarkNsfw()', async t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // Get submission
-    const submission = snooWrapper.getSubmission('ovklvg');
+    const submission = snooWrapped.getSubmission('ovklvg');
     t.is(submission.nsfw, undefined);
 
     // Unmark NSFW

@@ -1,7 +1,7 @@
 import ava, { TestInterface } from 'ava';
 import { MissingCredentialsError } from '../src/errors/missing-credentials-error';
 import { RequiredArgumentError } from '../src/errors/required-argument-erorr';
-import { SnooWrapper } from '../src/snoo-wrapper';
+import { SnooWrapped } from '../src/snoowrapped';
 import { credentials, userAgent, accessToken, clientId, clientSecret, refreshToken, username, password } from './_helpers/credentials';
 
 const test = ava as TestInterface<{
@@ -12,7 +12,7 @@ const test = ava as TestInterface<{
     refreshToken: string;
     username: string;
     password: string;
-    snooWrapper: SnooWrapper;
+    snooWrapped: SnooWrapped;
 }>;
 
 test.before(t => {
@@ -24,7 +24,7 @@ test.before(t => {
         refreshToken,
         username,
         password,
-        snooWrapper: new SnooWrapper(credentials)
+        snooWrapped: new SnooWrapped(credentials)
     };
 })
 
@@ -33,77 +33,77 @@ test.serial('credentials', t => {
 
     // OK
     t.notThrows(() => {
-        new SnooWrapper({ userAgent, clientId, clientSecret, accessToken });
-        new SnooWrapper({ userAgent, clientId, clientSecret, refreshToken });
-        new SnooWrapper({ userAgent, clientId, clientSecret, username, password });
+        new SnooWrapped({ userAgent, clientId, clientSecret, accessToken });
+        new SnooWrapped({ userAgent, clientId, clientSecret, refreshToken });
+        new SnooWrapped({ userAgent, clientId, clientSecret, username, password });
     });
 
     // Missing "options.userAgent"
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper();
+        new SnooWrapped();
     }, { instanceOf: RequiredArgumentError });
 
     // Missing "options.userAgent"
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({});
+        new SnooWrapped({});
     }, { instanceOf: RequiredArgumentError });
 
     // Missing credentials
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({ userAgent });
+        new SnooWrapped({ userAgent });
     }, { instanceOf: MissingCredentialsError });
 
     // Incorrect credentials
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({ userAgent, clientId });
+        new SnooWrapped({ userAgent, clientId });
     }, { instanceOf: MissingCredentialsError });
 
     // Incorrect credentials
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({ userAgent, clientId, username });
+        new SnooWrapped({ userAgent, clientId, username });
     }, { instanceOf: MissingCredentialsError });
 
     // Incorrect credentials
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({ userAgent, username });
+        new SnooWrapped({ userAgent, username });
     }, { instanceOf: MissingCredentialsError });
 
     // Incorrect credentials
     t.throws(() => {
         // @ts-expect-error
-        new SnooWrapper({ userAgent, refreshToken, password });
+        new SnooWrapped({ userAgent, refreshToken, password });
     }, { instanceOf: MissingCredentialsError });
 });
 
 test.serial('getComment()', t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(() => {
-        snooWrapper.getComment('THIS_IS_A_FAKE_COMMENT_ID_USED_FOR_TESTS');
+        snooWrapped.getComment('THIS_IS_A_FAKE_COMMENT_ID_USED_FOR_TESTS');
     });
 });
 
 test.serial('getUser()', t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(() => {
-        snooWrapper.getUser('THIS_IS_A_FAKE_USER_ID_USED_FOR_TESTS');
+        snooWrapped.getUser('THIS_IS_A_FAKE_USER_ID_USED_FOR_TESTS');
     });
 });
 
 test.serial('getSubmission()', t => {
-    const { snooWrapper } = t.context;
+    const { snooWrapped } = t.context;
 
     // OK
     t.notThrows(() => {
-        snooWrapper.getSubmission('THIS_IS_A_FAKE_SUBMISSION_ID_USED_FOR_TESTS');
+        snooWrapped.getSubmission('THIS_IS_A_FAKE_SUBMISSION_ID_USED_FOR_TESTS');
     });
 });

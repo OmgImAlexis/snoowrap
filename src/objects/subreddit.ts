@@ -1,4 +1,4 @@
-import { SnooWrapper } from "../snoo-wrapper";
+import { SnooWrapped } from "../snoowrapped";
 import { RedditContent } from "./reddit-content";
 
 export class Subreddit extends RedditContent {
@@ -7,8 +7,8 @@ export class Subreddit extends RedditContent {
     constructor(data: {
         name: string;
         subscribers?: number;
-    }, snooWrapper: SnooWrapper) {
-        super(data, snooWrapper);
+    }, snooWrapped: SnooWrapped) {
+        super(data, snooWrapped);
 
         this.subscribers = data.subscribers;
     }

@@ -22,11 +22,11 @@ type usernamePassword = {
 
 type Credentials = accessToken | refreshToken | usernamePassword;
 
-export type SnooWrapperOptions = {
+export type SnooWrappedOptions = {
     userAgent: string;
 } & Credentials;
 
-export class SnooWrapper {
+export class SnooWrapped {
     public readonly userAgent: string;
 
     #clientId?: string;
@@ -38,11 +38,11 @@ export class SnooWrapper {
     #password?: string;
     #scope?: string[];
 
-    constructor(options: SnooWrapperOptions) {
+    constructor(options: SnooWrappedOptions) {
         if (!options?.userAgent) throw new RequiredArgumentError('options.userAgent');
 
         // Convert the credentials type to a partial as the user may not have provided all of the required fields
-        const opts = options as SnooWrapperOptions & Partial<accessToken & refreshToken & usernamePassword>;
+        const opts = options as SnooWrappedOptions & Partial<accessToken & refreshToken & usernamePassword>;
 
         // Check options for credentials
         if ((!opts.accessToken || typeof opts.accessToken !== 'string') &&

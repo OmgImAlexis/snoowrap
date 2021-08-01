@@ -1,4 +1,4 @@
-import { SnooWrapper } from "../snoo-wrapper";
+import { SnooWrapped } from "../snoowrapped";
 import { SubredditType } from "../types";
 import { Comment, RawComment } from "./comment";
 import { RedditContent } from "./reddit-content";
@@ -80,8 +80,8 @@ export class Submission extends RedditContent {
         permalink?: string;
         stickied?: boolean;
         subscribers?: number;
-    }, snooWrapper: SnooWrapper) {
-        super(data, snooWrapper);
+    }, snooWrapped: SnooWrapped) {
+        super(data, snooWrapped);
         this.subreddit = data.subreddit;
         this.comments = data.comments;
         this.title = data.title;
@@ -122,8 +122,8 @@ export class Submission extends RedditContent {
 
         const submission = new Submission({
             ...this.data,
-            author: new RedditUser({ name: submissionData.author }, this.snooWrapper),
-            subreddit: new Subreddit({ name: submissionData.subreddit, subscribers: submissionData.subreddit_subscribers }, this.snooWrapper),
+            author: new RedditUser({ name: submissionData.author }, this.snooWrapped),
+            subreddit: new Subreddit({ name: submissionData.subreddit, subscribers: submissionData.subreddit_subscribers }, this.snooWrapped),
             title: submissionData.title,
             votes: {
                 up: submissionData.ups,
@@ -137,12 +137,12 @@ export class Submission extends RedditContent {
             body: submissionData.selftext,
             archived: submissionData.archived,
             nsfw: submissionData.over_18,
-            comments: comments.map(comment => new Comment({ name: comment.name }, this.snooWrapper)),
+            comments: comments.map(comment => new Comment({ name: comment.name }, this.snooWrapped)),
             spoiler: submissionData.spoiler,
             hidden: submissionData.hidden,
             permalink: submissionData.permalink,
             stickied: submissionData.stickied,
-        }, this.snooWrapper);
+        }, this.snooWrapped);
 
         return submission;
     }
@@ -157,7 +157,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     nsfw: Object.keys(data).length === 0 ? true : false,
-                }, this.snooWrapper)
+                }, this.snooWrapped)
             });
     }
 
@@ -171,7 +171,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     nsfw: Object.keys(data).length === 0 ? false : true,
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -185,7 +185,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     locked: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -199,7 +199,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     locked: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -213,7 +213,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     hidden: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -227,7 +227,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     hidden: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -242,7 +242,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     spoiler: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -256,7 +256,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     spoiler: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -271,7 +271,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     stickied: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 
@@ -285,7 +285,7 @@ export class Submission extends RedditContent {
                 return new Submission({
                     ...this.data,
                     stickied: Object.keys(data).length === 0 ? true : false
-                }, this.snooWrapper);
+                }, this.snooWrapped);
             });
     }
 }
