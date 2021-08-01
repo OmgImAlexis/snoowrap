@@ -9,3 +9,6 @@ test/_browser.spec.js
 oauth_info.json
 .eslintcache
 .env
+old_src
+old_test
+.vscode
