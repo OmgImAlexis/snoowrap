@@ -13,3 +13,4 @@ old_src
 old_test
 .vscode
 .nyc_output
+*.tgz
